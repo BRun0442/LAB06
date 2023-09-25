@@ -1,0 +1,46 @@
+#include "pic18f4520.h"
+#include "config.h"
+#include "ssd.h"
+
+void main(void)
+{
+    /*char saida = 0xAA;
+    char led = 0;
+    float i;
+    TRISD = 0x00;
+    
+    for(;;)
+    {
+        PORTD = 0xFF;
+        if(BitTst(saida, led)) BitClr(PORTD, led);
+        led++;                
+        if(led > 8) led = 0;
+        for(i = 0; i < 1000; i++);
+    }*/
+    
+    float tempo;
+    int minutos = 19-9;
+    int cont;
+    ssdInit();
+    
+    for (;;) {
+        cont++;
+        //ssdDigit(((cont / 10) % 10), 0); //0.1s
+        ssdDigit(((cont / 300) % 10), 0); //1s
+        ssdDigit(((cont / 3000) % 10), 1); //10s
+        
+        if(((cont / 1000) % 10) >= 6)
+        {
+            minutos++;
+            cont += 10000;
+            cont = 0;
+        }
+        
+        ssdDigit((minutos % 10), 2);
+        ssdDigit(((minutos / 10) % 10), 3);
+        
+        ssdUpdate();
+        
+        for (tempo = 0; tempo < 10; tempo++); // +- 10ms
+    }
+}
